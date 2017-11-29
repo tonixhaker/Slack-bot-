@@ -1,1 +1,1 @@
-web: gunicorn slackapp.wsgi
+web: python manage.py runserver
