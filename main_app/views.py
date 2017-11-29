@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.conf import settings
 from .models import Team
@@ -12,6 +13,11 @@ class IndexView(TemplateView):
         context = super(IndexView, self).get_context_data(**kwargs)
         context['client_id'] = settings.CLIENT_ID
         return context
+
+@csrf_exempt
+def atpytu(request):
+    print(request.body)
+    return HttpResponse("Заявка отправлена!")
 
 
 def slack_oauth(request):
