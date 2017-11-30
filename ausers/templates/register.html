@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="row">
+    <h1 style="text-align: center">New User</h1>
+</div>
+<div class="row">
+    <form action="" class="col-sm-6 col-sm-offset-3" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% include 'regtweak.html' with form=form %}
+
+        <input class="btn btn-success col-sm-2 col-sm-offset-5" type="submit" value="Submit" />
+    </form>
+</div>
+{% endblock %}

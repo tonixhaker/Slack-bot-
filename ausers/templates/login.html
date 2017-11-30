@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+{% load staticfiles %}
+{% block content %}
+    <link rel="stylesheet" href="{% static 'login.css'%}">
+    <h1 style="text-align: center" >Атпути Начальник for Slack</h1>
+    <div class="row">
+        <img src="{% static "clock.png" %}" alt="clock" class="clock col-sm-2 col-sm-offset-5"/>
+        <form action="{%url 'auth' %}" class="col-sm-4 col-sm-offset-4" method="post">
+                    {% csrf_token %}
+            <div class="form-group">
+                <label for="id_email">Email address:</label>
+                <input type="email" name="email" class="form-control is-invalid" id="id_email" maxlength="255" required="">
+            </div>
+            <div class="form-group">
+                <label for="id_password">Password:</label>
+                <input type="password" name="password" class="form-control is-valid" id="id_password" maxlength="128" required="">
+            </div>
+            <p style="text-align: center">Нет аккаунта? &nbsp;&nbsp;<a href="{%url 'registration' %}">Регистрация</a><span class="fontawesome-arrow-right"></span></p>
+            <input class="btn btn-success col-sm-2 col-sm-offset-5" type="submit" value="Login" />
+        </form>
+    </div>
+
+{% endblock %}

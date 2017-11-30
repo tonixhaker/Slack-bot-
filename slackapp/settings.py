@@ -30,7 +30,9 @@ DEBUG = True
 # Application definition
 
 INSTALLED_APPS = [
+    'ausers',
     'main_app',
+    'widget_tweaks',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -85,6 +87,10 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+AUTH_USER_MODEL = 'ausers.User'
+AUTHENTICATION_BACKENDS = (
+        'django.contrib.auth.backends.ModelBackend',
+    )
 
 AUTH_PASSWORD_VALIDATORS = [
     {
