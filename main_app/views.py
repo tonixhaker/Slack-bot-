@@ -1,25 +1,21 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import TemplateView
 from django.conf import settings
 from .models import Team
+from ausers.models import User
 import requests
 import json
 
-class IndexView(TemplateView):
-    template_name = "index.html"
-
-    def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
-        context['client_id'] = settings.CLIENT_ID
-        return context
 
 @csrf_exempt
 def atpytu(request):
+    """command from slack(/atpyti)"""
     print(request.body)
     return HttpResponse("Заявка отправлена!")
 
-
+@login_required
 def slack_oauth(request):
     code = request.GET['code']
 
@@ -35,6 +31,9 @@ def slack_oauth(request):
         name=data['team_name'],
         team_id=data['team_id'],
         bot_user_id=data['bot']['bot_user_id'],
-        bot_access_token=data['bot']['bot_access_token']
+        bot_access_token=data['bot']['bot_access_token'],
+        incoming_hook=data['incoming_webhook']['url'],
+        channelid=data['incoming_webhook']['channel_id'],
+        user=request.user
     )
-    return HttpResponse('Bot added to your Slack team!')
+    return redirect('/')

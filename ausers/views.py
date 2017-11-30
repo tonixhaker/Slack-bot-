@@ -32,6 +32,7 @@ class ProfileView(TemplateView):
         context = super(ProfileView, self).get_context_data(**kwargs)
         if self.request.user.is_anonymous():
             return redirect('/')
+        context['teams'] = self.request.user.team_set.all()
         context['user'] = self.request.user
         return context
 
@@ -44,6 +45,7 @@ class LoginView(TemplateView):
         if not self.request.user.is_anonymous():
             self.template_name = 'profile.html'
             context['user'] = self.request.user
+            context['teams'] = self.request.user.team_set.all()
         return context
 
 
