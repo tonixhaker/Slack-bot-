@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="{% static 'layout.css'%}">
 </head>
 <body>
+    {% if user.is_authenticated %}
+        <div class="row" style="margin-top: 10px;">
+            <a class="btn btn-danger col-sm-1 col-sm-offset-10" href="{%url 'logout' %}">Logout</a>
+        </div>
+    {% endif %}
+
     {% block content %}
     {% endblock %}
 </body>

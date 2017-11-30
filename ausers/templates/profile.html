@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>{{ user }}</h1>
-<a class="btn btn-warning col-sm-2 col-sm-offset-5" href="{%url 'logout' %}">Logout</a>
-</body>
-</html>
+{% extends 'layout.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <h3>Email: {{ user.email }}</h3>
+            <a class="btn btn-primary col-sm-2" href="#">New Team</a>
+        </div>
+    </div>
+{% endblock %}
