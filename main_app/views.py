@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
+import slackweb
 from .models import Team
 from ausers.models import User
 import requests
@@ -36,4 +37,11 @@ def slack_oauth(request):
         channelid=data['incoming_webhook']['channel_id'],
         user=request.user
     )
+    return redirect('/')
+
+
+def testsend(request):
+    url = "https://hooks.slack.com/services/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"
+    slack = slackweb.Slack(url=url)
+    slack.notify(text="ЗДАРОВААААА ПЕЕЕС!")
     return redirect('/')
