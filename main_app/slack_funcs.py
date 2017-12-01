@@ -9,7 +9,7 @@ def HookSend(message):
             sender = user
             break
     name = sender['real_name']
-    nick = sender['name']
+    nick = sender['id']
 
     hook = message.team.incoming_hook
     slack = slackweb.Slack(url=hook)

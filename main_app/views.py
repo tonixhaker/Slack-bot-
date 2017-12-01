@@ -49,6 +49,7 @@ def slack_oauth(request):
     url = 'https://slack.com/api/oauth.access'
     json_response = requests.get(url, params)
     data = json.loads(json_response.text)
+    print(data)
     Team.objects.get_or_create(
         name=data['team_name'],
         team_id=data['team_id'],
@@ -56,6 +57,7 @@ def slack_oauth(request):
         bot_access_token=data['bot']['bot_access_token'],
         incoming_hook=data['incoming_webhook']['url'],
         channelid=data['incoming_webhook']['channel_id'],
+        access_token=data['access_token'],
         user=request.user
     )
     return redirect('/')
@@ -86,10 +88,10 @@ def testdirect(request):
     return redirect('/')
 
 def directmessage(team,id,message):
-    print("in")
     token = team.bot_access_token
     slack_client = SlackClient(token)
     users = slack_client.api_call("users.list")
+    print(users)
     channel = slack_client.api_call("im.open", user=id)
     channel = channel['channel']['id']
     slack_client.api_call(
@@ -100,5 +102,40 @@ def directmessage(team,id,message):
 
 @csrf_exempt
 def event(request):
-    print(request)
-    return HttpResponse(request.POST['challenge'])
+    try:
+        event_data = json.loads(request.body.decode('utf-8'))
+        analyse_thread(event_data)
+        if "challenge" in event_data:
+            return HttpResponse(
+                event_data.get("challenge")
+            )
+        return HttpResponse("ok")
+    except:
+        return HttpResponse("error")
+
+
+def analyse_thread(event_data):
+    if 'thread_ts' in event_data['event']:
+        thread_ts = event_data['event']['thread_ts']
+        channel = event_data['event']['channel']
+        team = Team.objects.get(team_id=event_data['team_id'])
+        token = team.access_token
+        slack_client = SlackClient(token)
+        conv = slack_client.api_call(
+            "conversations.replies",
+            channel=channel,
+            ts=thread_ts
+        )
+        parce_threads(conv, team)
+
+
+def parce_threads(conv, team):
+    main_message = conv['messages'][0]['text']
+    index = main_message.index(":")
+    main_text = main_message[index + 2:]
+    op = main_message.index("(")
+    cl = main_message.index(")")
+    nickname = main_message[op+1:cl]
+    mess_count = len(conv['messages'])-1
+    lastanswer = conv['messages'][mess_count]['text']
+    directmessage(team,nickname,lastanswer)
