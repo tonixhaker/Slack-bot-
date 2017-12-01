@@ -5,18 +5,37 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 import slackweb
 from slackclient import SlackClient
-
-from .models import Team
+from.slack_funcs import HookSend
+from .models import Team, Message
 from ausers.models import User
 import requests
 import json
 
 
+# @csrf_exempt
+# def atpytu(request):
+#     """command from slack(/atpyti)"""
+#     print(request.body)
+#     return HttpResponse("Заявка отправлена!")
+
 @csrf_exempt
 def atpytu(request):
     """command from slack(/atpyti)"""
-    print(request.body)
-    return HttpResponse("Заявка отправлена!")
+    try:
+        team = Team.objects.get(team_id=request.POST['team_id'])
+        user_id = request.POST['user_id']
+        text = request.POST['text']
+        if len(text) < 10:
+            return HttpResponse("Слишком короткое сообщение!")
+        message = Message.objects.create(
+            team=team,
+            user_id=user_id,
+            text=text
+        )
+        HookSend(message)
+        return HttpResponse("Заявка отправлена!")
+    except:
+        return HttpResponse("Ошибка на сервере!")
 
 @login_required
 def slack_oauth(request):
@@ -49,14 +68,37 @@ def testsend(request):
     return redirect('/')
 
 
+# def testdirect(request):
+#     # slack_client = SlackClient('xoxb-279765198183-6GxdCm8gWuEKJcEIOpNiAOrg')
+#     # channels_call = slack_client.api_call("users.list")
+#     # print(slack_client.api_call("im.open", user="U86EZ1F99"))
+#     # print(channels_call)
+#     # slack_client.api_call(
+#     #     "chat.postMessage",
+#     #     channel="D86QGH4HK",
+#     #     text="DIRECT MESSAGE HELLO!"
+#     # )
+#     directmessage(Team.objects.first(),'U86EZ1F99','qwe')
+#     return redirect('/')
+
 def testdirect(request):
-    slack_client = SlackClient('xoxb-279765198183-hQHZ91RLrWDQygeM8bRN0e4O')
-    channels_call = slack_client.api_call("users.list")
-    print(slack_client.api_call("im.open", user="U86EZ1F99"))
-    print(channels_call)
+    directmessage(Team.objects.first(),'U86EZ1F99','qwe')
+    return redirect('/')
+
+def directmessage(team,id,message):
+    print("in")
+    token = team.bot_access_token
+    slack_client = SlackClient(token)
+    users = slack_client.api_call("users.list")
+    channel = slack_client.api_call("im.open", user=id)
+    channel = channel['channel']['id']
     slack_client.api_call(
         "chat.postMessage",
-        channel="D86QGH4HK",
-        text="DIRECT MESSAGE HELLO!"
+        channel=channel,
+        text=message
     )
-    return redirect('/')
+
+@csrf_exempt
+def event(request):
+    print(request)
+    return HttpResponse(request.POST['challenge'])
