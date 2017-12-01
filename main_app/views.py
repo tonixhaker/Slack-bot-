@@ -4,6 +4,8 @@ from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 import slackweb
+from slackclient import SlackClient
+
 from .models import Team
 from ausers.models import User
 import requests
@@ -44,4 +46,17 @@ def testsend(request):
     url = "https://hooks.slack.com/services/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"
     slack = slackweb.Slack(url=url)
     slack.notify(text="ЗДАРОВААААА ПЕЕЕС!")
+    return redirect('/')
+
+
+def testdirect(request):
+    slack_client = SlackClient('xoxb-279765198183-hQHZ91RLrWDQygeM8bRN0e4O')
+    channels_call = slack_client.api_call("users.list")
+    print(slack_client.api_call("im.open", user="U86EZ1F99"))
+    print(channels_call)
+    slack_client.api_call(
+        "chat.postMessage",
+        channel="D86QGH4HK",
+        text="DIRECT MESSAGE HELLO!"
+    )
     return redirect('/')
