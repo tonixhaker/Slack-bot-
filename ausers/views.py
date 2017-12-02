@@ -1,6 +1,6 @@
 from django.contrib.auth import login, logout
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.views.generic import CreateView, TemplateView, DeleteView
 
 from main_app.models import Team
@@ -103,10 +103,7 @@ class Moder(TemplateView):
         print(team.name)
         team.user.add(user)
         team.save()
-        return HttpResponse(team_id, status=200)
-    # def form_valid(self, form):
-    #     prodobj = Product.objects.get(id=form.cleaned_data['product'].id)
-    #     Cart.objects.create(quantity=int(form.cleaned_data['quantity']), product=prodobj)
-    #     return redirect('products')
+        return redirect('index')
+
 
 

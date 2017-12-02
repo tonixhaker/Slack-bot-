@@ -84,6 +84,7 @@ class Dialog(object):
         self.parent = parent
         self.answers = answers
 
+
 class MessagesDetail(TemplateView):
     template_name = "messages_details.html"
 
