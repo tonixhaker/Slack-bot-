@@ -1,7 +1,9 @@
+bottle==0.12.13
 certifi==2017.11.5
 chardet==3.0.4
 dj-database-url==0.4.1
 Django==1.11.1
+django-widget-tweaks==1.4.1
 gunicorn==19.6.0
 idna==2.6
 psycopg2==2.7.3.2
@@ -9,6 +11,7 @@ pytz==2017.3
 requests==2.18.4
 six==1.11.0
 slackclient==1.1.0
+slackweb==1.0.5
 urllib3==1.22
 websocket-client==0.44.0
 whitenoise==3.2
