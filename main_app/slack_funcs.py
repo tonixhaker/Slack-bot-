@@ -1,6 +1,6 @@
 import slackweb
 from slackclient import SlackClient
-from .models import Team
+from .models import Team, Message, Answer
 
 
 def hook_send(message):
@@ -13,6 +13,8 @@ def hook_send(message):
             break
     name = sender['real_name']
     nick = sender['id']
+    message.user_name = name
+    message.save()
 
     hook = message.team.incoming_hook
     slack = slackweb.Slack(url=hook)
@@ -58,4 +60,9 @@ def parce_threads(conv, team):
     nickname = main_message[op+1:cl]
     mess_count = len(conv['messages'])-1
     lastanswer = conv['messages'][mess_count]['text']
+    try:
+        parent = Message.objects.get(text=main_text)
+    except:
+        parent = None
+    Answer.objects.create(message=parent, text=lastanswer)
     directmessage(team, nickname, lastanswer)

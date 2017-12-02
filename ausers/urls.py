@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^profile/$', views.ProfileView.as_view(), name='profile'),
     url(r'^logout/$', views.logout_view, name='logout'),
     url(r'^auth/$', views.auth_user_try, name='auth'),
+    url(r'^prodell/(?P<pk>\d+)/$', views.ProductDel.as_view(), name='prodell'),
 ]

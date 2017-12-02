@@ -3,6 +3,7 @@ import json
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from.slack_funcs import hook_send, analyse_thread
@@ -21,7 +22,7 @@ def atpytu(request):
         message = Message.objects.create(
             team=team,
             user_id=user_id,
-            text=text
+            text=text,
         )
         hook_send(message)
         return HttpResponse("Заявка отправлена!")
@@ -42,7 +43,9 @@ def slack_oauth(request):
     json_response = requests.get(url, params)
     data = json.loads(json_response.text)
     try:
-        Team.objects.get(team_id=data['team_id']).delete()
+        team = Team.objects.get(team_id=data['team_id'])
+        template = loader.get_template("already-team.html")
+        return HttpResponse(template.render())
     except:
         print("good")
     Team.objects.get_or_create(
@@ -60,7 +63,6 @@ def slack_oauth(request):
 
 @csrf_exempt
 def event(request):
-    print("EVENT")
     try:
         event_data = json.loads(request.body.decode('utf-8'))
         if "challenge" in event_data:

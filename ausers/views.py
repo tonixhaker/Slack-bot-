@@ -1,6 +1,8 @@
 from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView, TemplateView, DeleteView
+
+from main_app.models import Team
 from .forms import UserForm
 from .models import User
 
@@ -53,6 +55,7 @@ def logout_view(request):
     logout(request)
     return redirect('index')
 
+
 def auth_user_try(request):
     try:
         user = User.objects.get(email=request.POST['email'], password=request.POST['password'])
@@ -60,3 +63,12 @@ def auth_user_try(request):
         return redirect('index')
     login(request, user)
     return redirect('profile')
+
+
+class ProductDel(DeleteView):
+    template_name = "confirm.html"
+    model = Team
+    success_url = '/'
+
+    #if formvalid удалить всех модераторов и сообщения
+
