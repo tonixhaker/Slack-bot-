@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^logout/$', views.logout_view, name='logout'),
     url(r'^auth/$', views.auth_user_try, name='auth'),
     url(r'^prodell/(?P<pk>\d+)/$', views.ProductDel.as_view(), name='prodell'),
+    url(r'^addmoder/$', views.Moder.as_view(), name='addmoder'),
 ]

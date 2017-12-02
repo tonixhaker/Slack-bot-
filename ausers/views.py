@@ -1,4 +1,5 @@
 from django.contrib.auth import login, logout
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, TemplateView, DeleteView
 
@@ -72,5 +73,40 @@ class ProductDel(DeleteView):
     model = Team
     success_url = '/'
 
-    #if formvalid удалить всех модераторов и сообщения
+
+class Moder(TemplateView):
+    template_name = "moder.html"
+    model = Team
+    success_url = '/'
+
+    def get_context_data(self, **kwargs):
+        context = super(Moder, self).get_context_data(**kwargs)
+        user = self.request.user
+        context['teams'] = Team.objects.filter(user__id=user.id)
+        return context
+
+    def post(self, request):
+        team_id = request.POST['teams']
+        email = request.POST['email']
+        pswd = request.POST['password']
+        try:
+            user = User.objects.get(email=email)
+        except:
+            user = User.objects.create(
+                email=email,
+                password=pswd,
+                confirm_password=pswd
+            )
+        user.staff=True
+        user.save()
+        team = Team.objects.get(id=team_id)
+        print(team.name)
+        team.user.add(user)
+        team.save()
+        return HttpResponse(team_id, status=200)
+    # def form_valid(self, form):
+    #     prodobj = Product.objects.get(id=form.cleaned_data['product'].id)
+    #     Cart.objects.create(quantity=int(form.cleaned_data['quantity']), product=prodobj)
+    #     return redirect('products')
+
 

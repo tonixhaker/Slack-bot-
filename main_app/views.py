@@ -50,7 +50,7 @@ def slack_oauth(request):
         return HttpResponse(template.render())
     except:
         print("good")
-    Team.objects.get_or_create(
+    team = Team.objects.create(
         name=data['team_name'],
         team_id=data['team_id'],
         bot_user_id=data['bot']['bot_user_id'],
@@ -58,8 +58,9 @@ def slack_oauth(request):
         incoming_hook=data['incoming_webhook']['url'],
         channelid=data['incoming_webhook']['channel_id'],
         access_token=data['access_token'],
-        user=request.user
     )
+    team.user.add(request.user)
+    team.save()
     return redirect('/')
 
 
@@ -90,6 +91,7 @@ class MessagesDetail(TemplateView):
         context = super(MessagesDetail, self).get_context_data(**kwargs)
         team = Team.objects.get(id=self.kwargs['pk'])
         context['team'] = team
+        context['user'] = self.request.user
         messages = team.message_set.all()
         resultarr = []
         for msg in messages:

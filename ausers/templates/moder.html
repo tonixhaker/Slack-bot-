@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+
+    <form action="" method="post" class="col-sm-6 col-sm-offset-3">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_email">Email address:</label>
+            <input type="email" name="email" maxlength="255" required id="id_email" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" name="password" maxlength="128" required id="password" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="teams">Team:</label>
+            <select name="teams" maxlength="128" required id="teams" class="form-control">
+                {% for team in teams %}
+                <option value="{{ team.id }}">{{ team.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <input class="btn btn-success col-sm-2 col-sm-offset-5" type="submit" value="Submit" />
+    </form>
+{% endblock %}
