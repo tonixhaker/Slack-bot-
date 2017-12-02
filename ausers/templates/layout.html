@@ -10,7 +10,8 @@
 <body>
     {% if user.is_authenticated %}
         <div class="row" style="margin-top: 10px;">
-            <a class="btn btn-danger col-sm-1 col-sm-offset-10" href="{%url 'logout' %}">Logout</a>
+            <a href="{%url 'index' %}" style="text-align: center; text-decoration: none; color:black" class="col-sm-2 col-sm-offset-5"><h2>АтпутиBot</h2></a>
+            <a class="btn btn-danger col-sm-1 col-sm-offset-3" href="{%url 'logout' %}">Logout</a>
         </div>
     {% endif %}
 

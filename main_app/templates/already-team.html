@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Ooops</title>
-</head>
-<body>
-<h1>Hello)</h1>
-</body>
-</html>
+{% extends 'layout.html' %}
+{% block content %}
+    <div class="row" style="margin-top: 10px;">
+        <h1 style="text-align: center">This Workspace already registred</h1>
+        <h3 style="text-align: center">Check your workspace list or communicate with workspace members</h3>
+    </div>
+<div class="row" style="margin-top: 10px;">
+    <a class="btn btn-info col-sm-2 col-sm-offset-5" href="{%url 'index' %}">Main page</a>
+</div>
+{% endblock %}

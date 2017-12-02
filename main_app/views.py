@@ -6,6 +6,8 @@ from django.shortcuts import redirect
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
+from django.views.generic import TemplateView
+
 from.slack_funcs import hook_send, analyse_thread
 from.models import Team, Message
 
@@ -73,5 +75,27 @@ def event(request):
         return HttpResponse("ok")
     except:
         return HttpResponse("error")
+
+
+class Dialog(object):
+
+    def __init__(self, parent, answers):
+        self.parent = parent
+        self.answers = answers
+
+class MessagesDetail(TemplateView):
+    template_name = "messages_details.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(MessagesDetail, self).get_context_data(**kwargs)
+        team = Team.objects.get(id=self.kwargs['pk'])
+        context['team'] = team
+        messages = team.message_set.all()
+        resultarr = []
+        for msg in messages:
+            answers = msg.answer_set.all()
+            resultarr.append(Dialog(msg, answers))
+        context['msglist'] = resultarr
+        return context
 
 

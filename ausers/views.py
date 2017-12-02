@@ -23,6 +23,8 @@ class RegisterView(CreateView):
         valid = super(RegisterView, self).form_valid(form)
         email, password = form.cleaned_data.get('email'), form.cleaned_data.get('password')
         user = User.objects.get(email=email, password=password)
+        user.admin = True
+        user.save()
         login(self.request, user)
         return valid
 
