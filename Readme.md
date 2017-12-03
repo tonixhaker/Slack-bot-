@@ -3,13 +3,15 @@
 * `pip install -r requirements.txt`
 
 #Run
+* `python manage.py makemigrations`
+* `python manage.py migrate`
 * `python manage.py runserver`
-* `python manage.py listener`
 
-#Bot Settings
-* Go to `localhost:8000`
-* Add bot to your workspace
+#Deployed on
+* https://atpytu.herokuapp.com/
 
-#Using
-* Write 'hi' to added bot
+#Features
+* command /atpytu 'text' - sends notification in selected channel
+* direct messages from treads in selected channel
+* administration, authentication, moderation on https://atpytu.herokuapp.com/
 
